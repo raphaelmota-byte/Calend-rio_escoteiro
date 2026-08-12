@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calendário Escoteiro</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <header id="topo">
+            <div class="container_header">
+                <div class="img_topo">
+
+                    <img src="/frontend/img/barraca_header.svg" alt="barraca">
+
+                </div>
+                <h1>111° GEAR Santos Dumont</h1>
+
+            </div>
+        </header>
+
+        <div id="app"> <!-- app é o padrao para representar onde vai entrar a logica da aplicação -->
+            <aside id="sidebar">
+                <h2>Categorias</h2>
+                <div id="filtro-categorias">
+                <!-- checkboxes de categoria serão inseridos aqui via JS -->
+
+                </div>
+
+                <h2>Seções</h2>
+
+                <div id="filtro-secoes">
+                  <!-- checkboxes de seção serão inseridos aqui via JS -->
+                </div>
+            </aside>
+
+            <!-- main é o principal conteudo da aplicaçõa, só deve existir uma main por código -->
+            <main id="conteudo">
+                <div id="calendario"></div>
+            </main>
+        </div>
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
+

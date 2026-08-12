@@ -8,3 +8,10 @@ wheels/
 
 # Virtual environments
 .venv
+
+#banco de dados
+db.sqlite3
+
+#arquivos de media vindo do usuário
+media/
+
