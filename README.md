@@ -256,5 +256,6 @@ públicas.
 - E-mail de confirmação de inscrição (reduz risco de e-mail digitado
   errado, já que hoje não há verificação)
 - Exportação de eventos para `.ics` (Google Calendar / Apple Calendar)
-- Frontend: calendário visual + formulário de inscrição consumindo a
-  rota `/api/eventos/<id>/inscrever/`
+- + Frontend: formulário de inscrição consumindo a rota
+  `/api/eventos/<id>/inscrever/` (calendário visual e filtros de
+  categoria/seção já implementados)
