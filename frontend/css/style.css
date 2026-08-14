@@ -20,9 +20,17 @@ body::before{
 }
  
 header{
-    background-color: gray;
-    padding: 6px 16px;
-    border-radius: 12px 12px 0 0;
+    background-color: rgba(128, 128, 128, 0.6); /*mesma cor cinza, mas com 60% de opacidade (o 128,128,128 é o equivalente RGB de gray)*/
+    backdrop-filter: blur(20px) saturate(180%); /*borra o conteúdo passando atrás e intensifica a cor dele */
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    
+    padding: 0px 12px;
+    position: sticky; /* se move no scroll até chegar em top 0, dps se comporta como um header que acompanha a pagina */
+    top:0 ;
+    width: 100% ;
+    height: 60px;
+    box-sizing: border-box;
     
 }
 
@@ -44,8 +52,8 @@ header{
 
 .img_topo{
     background-color: #4A6B48;
-    height: 42px;
-    width:50px;
+    height: 40px;
+    width: 46px;
     border-radius:5px;
 
 
@@ -55,4 +63,99 @@ header{
     width:100% ;
     height: 100% ;
     object-fit: cover;
+}
+
+#btn-menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 30px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: 10px;
+    padding: 0;
+}
+
+#btn-menu span{
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: black;
+    border-radius: 2px;
+}
+
+#sidebar{
+    position: fixed;
+    top: var(--altura-header);
+    right: 0;
+    width: 280px;
+    height: calc(100% - var(--altura-header));
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 20px;
+    z-index: 20;
+    transform: translateX(100%);
+    transition: transform 300ms ease-out;
+    overflow-y: auto;
+    
+    display: flex;
+    flex-direction: column;
+    gap:28px ;
+}
+
+#sidebar.ativo{
+    transform: translateX(0);
+}
+
+#sidebar h2{
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #555;
+    margin: 0 ;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
+
+#filtro-categorias,
+#filtro-secoes{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.grupo-filtro{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+#overlay{
+    position: fixed;
+    top: var(--altura-header);
+    left: 0;
+    width: 100%;
+    height: calc(100% - var(--altura-header));
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 15;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-out;
+}
+
+#overlay.ativo{
+    opacity: 1;
+    pointer-events: auto;
 }
