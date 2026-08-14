@@ -17,24 +17,35 @@
 
                 </div>
                 <h1>111° GEAR Santos Dumont</h1>
+                <button id="btn-menu" aria-label="Abrir menu de filtros">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
 
             </div>
         </header>
 
         <div id="app"> <!-- app é o padrao para representar onde vai entrar a logica da aplicação -->
             <aside id="sidebar">
-                <h2>Categorias</h2>
-                <div id="filtro-categorias">
-                <!-- checkboxes de categoria serão inseridos aqui via JS -->
+                <div class="grupo-filtro">
+
+                    <h2>Categorias</h2>
+                    <div id="filtro-categorias">
+
+                    </div>
 
                 </div>
+                <div class="grupo-filtro">
 
-                <h2>Seções</h2>
+                    <h2>Seções</h2>
+                    <div id="filtro-secoes">
+                        
+                    </div>
 
-                <div id="filtro-secoes">
-                  <!-- checkboxes de seção serão inseridos aqui via JS -->
                 </div>
             </aside>
+            <div id="overlay"></div>
 
             <!-- main é o principal conteudo da aplicaçõa, só deve existir uma main por código -->
             <main id="conteudo">

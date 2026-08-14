@@ -1,4 +1,12 @@
+:root {
+    --altura-header: 60px;
+}
+
+
+
 body{
+    margin: 0;
+    padding: 0;
     position:relative ;
     z-index: 0;
 }
