@@ -1,4 +1,6 @@
 const API_URL = "http://127.0.0.1:8000/api";
+let calendar ;
+let todosEventos = [];
 
 async function buscarEventos() {
     const resposta = await fetch(`${API_URL}/eventos/`);
@@ -7,15 +9,29 @@ async function buscarEventos() {
     const eventosFormatados = eventos.map(function(evento) {
         return {
           title: evento.titulo,
-          start: evento.data_inicio
+          start: evento.data_inicio,
+          extendedProps: {
+          categoria: evento.categoria,
+          secoes: evento.secoes
+        }
         };
     });
+    todosEventos = eventosFormatados;
 
     const calendarEl = document.getElementById('calendario');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'pt-br',
-        events: eventosFormatados
+        events: eventosFormatados ,
+        headerToolbar: {
+        left: '',
+        center: '',
+        right: ''
+    },
+        datesSet: function(info) {
+        document.getElementById('titulo-calendario').textContent = info.view.title;
+    }
+
     });
 
     calendar.render();
@@ -56,6 +72,41 @@ async function buscarSecoes(){
 }
 buscarSecoes();
 
+function aplicarFiltros() {
+    const categoriasMarcadas = Array.from(
+        document.querySelectorAll('#filtro-categorias input:checked')
+    ).map(function(input) {
+        return Number(input.value);
+    });
+
+    const secoesMarcadas = Array.from(
+        document.querySelectorAll('#filtro-secoes input:checked')
+    ).map(function(input) {
+        return Number(input.value);
+    });
+
+    const eventosFiltrados = todosEventos.filter(function(evento) {
+        const categoriaOk = categoriasMarcadas.includes(evento.extendedProps.categoria);
+        const secaoOk = evento.extendedProps.secoes.some(function(idSecao) {
+            return secoesMarcadas.includes(idSecao);
+        });
+        return categoriaOk && secaoOk;
+    });
+
+    calendar.setOption('events', eventosFiltrados);
+}
+
+function configurarFiltros() {
+    const filtroCategorias = document.getElementById('filtro-categorias');
+    const filtroSecoes = document.getElementById('filtro-secoes');
+
+    filtroCategorias.addEventListener('change', aplicarFiltros);
+    filtroSecoes.addEventListener('change', aplicarFiltros);
+}
+
+configurarFiltros();
+
+
 function configurarMenu() {
     const btnMenu = document.getElementById('btn-menu');
     const sidebar = document.getElementById('sidebar');
@@ -73,3 +124,34 @@ function configurarMenu() {
 }
 
 configurarMenu();
+
+function configurarBotaoHoje() {
+    const btnHoje = document.getElementById('btn-hoje');
+
+    btnHoje.addEventListener('click', function() {
+        if (calendar) {
+            calendar.today();
+        }
+    });
+}
+
+configurarBotaoHoje();
+
+function configurarNavegacao() {
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    btnPrev.addEventListener('click', function() {
+        if (calendar) {
+            calendar.prev();
+        }
+    });
+
+    btnNext.addEventListener('click', function() {
+        if (calendar) {
+            calendar.next();
+        }
+    });
+}
+
+configurarNavegacao();
