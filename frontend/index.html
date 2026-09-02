@@ -6,32 +6,33 @@
         <title>Calendário Escoteiro</title>
         <link rel="stylesheet" href="css/style.css">
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        
     </head>
     <body>
 
-        <header id="topo">
-            <div class="container_header">
-                <div class="img_topo">
+        <header class="container-fluid d-flex justify-content-between align-items-center mt-0 gap-4 py-3 px-4 " id="topo">
+            <div class="d-flex align-items-center gap-3">
+                    <div class="img_topo">
+                        <img src="/frontend/img/barraca_header.svg" alt="barraca">
+                    </div>
 
-                    <img src="/frontend/img/barraca_header.svg" alt="barraca">
-
+                    <h1 class="m-0 text-nowrap">111° GEAR Santos Dumont</h1>
                 </div>
-                <h1>111° GEAR Santos Dumont</h1>
+                <div class="d-flex align-items-center gap-3 ">
 
-                <div class="nav-calendario">
-                      <button id="btn-prev" aria-label="Mês anterior">‹</button>
-                      <span id="titulo-calendario">agosto de 2026</span>
-                      <button id="btn-next" aria-label="Próximo mês">›</button>
-                  </div>
-
-                <button id="btn-hoje">Hoje</button>
-                <button id="btn-menu" aria-label="Abrir menu de filtros">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-
-            </div>
+                    <button id="btn-prev" class="d-flex align-items-center justify-content-center p-0 border-0" aria-label="Mês anterior">‹</button>
+                    <span id="titulo-calendario">agosto de 2026</span>
+                    <button id="btn-next" class="d-flex align-items-center justify-content-center p-0 border-0" aria-label="Próximo mês">›</button>
+                    
+                    <button id="btn-hoje" class="d-flex align-items-center justify-content-center p-0 border-0 me-3">Hoje</button>
+                    <button id="btn-menu" aria-label="Abrir menu de filtros">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                </div>
         </header>
 
         <div id="app"> <!-- app é o padrao para representar onde vai entrar a logica da aplicação -->
