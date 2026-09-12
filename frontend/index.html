@@ -4,32 +4,37 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Calendário Escoteiro</title>
-        <link rel="stylesheet" href="css/style.css">
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="css/style.css">
         
     </head>
     <body>
 
-        <header class="container-fluid d-flex justify-content-between align-items-center mt-0 gap-4 py-3 px-4 " id="topo">
-            <div class="d-flex align-items-center gap-3">
+        <header class="container-fluid d-flex justify-content-center justify-content-md-between align-items-center mt-0 gap-4 gap-md-4 py-3 px-1 px-md-4 " id="topo">
+            <div class="d-flex align-items-center gap-3 gap-md-3">
                     <div class="img_topo">
                         <img src="/frontend/img/barraca_header.svg" alt="barraca">
                     </div>
 
-                    <h1 class="m-0 text-nowrap">111° GEAR Santos Dumont</h1>
-                </div>
-                <div class="d-flex align-items-center gap-3 ">
+                    <h1 class="fs-6 fs-md-3 m-0 text-nowrap" id="titulo-grupo">111° GEAR Santos Dumont</h1>
+            </div>
+                <div class="d-flex align-items-center gap-2 gap-md-3 ">
 
-                    <button id="btn-prev" class="d-flex align-items-center justify-content-center p-0 border-0" aria-label="Mês anterior">‹</button>
-                    <span id="titulo-calendario">agosto de 2026</span>
-                    <button id="btn-next" class="d-flex align-items-center justify-content-center p-0 border-0" aria-label="Próximo mês">›</button>
+                   <button id="btn-prev" class="btn border-0 d-flex align-items-center justify-content-center p-1" aria-label="Mês anterior">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
                     
-                    <button id="btn-hoje" class="d-flex align-items-center justify-content-center p-0 border-0 me-3">Hoje</button>
-                    <button id="btn-menu" aria-label="Abrir menu de filtros">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                    <span id="titulo-calendario" class="text-nowrap small fs-md-6 fw-semibold px-1">set/2026</span>
+
+                    <button id="btn-next" class="btn border-0 d-flex align-items-center justify-content-center p-1" aria-label="Próximo mês">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                    
+                    <button id="btn-hoje" class="d-flex align-items-center justify-content-center p-0 border-0">Hoje</button>
+                    <button id="btn-menu" class="btn btn-sm border-0 p-1 d-flex align-items-center" aria-label="Abrir menu de filtros">
+                        <i class="bi bi-list fs-2 text-dark"></i>
                     </button>
                     
                 </div>

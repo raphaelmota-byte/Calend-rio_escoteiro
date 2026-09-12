@@ -29,8 +29,19 @@ async function buscarEventos() {
         right: ''
     },
         datesSet: function(info) {
-        document.getElementById('titulo-calendario').textContent = info.view.title;
-    }
+    // 1. Pegamos a data atual que o calendário está mostrando na tela
+    const data = info.view.currentStart;
+
+    // 2. Pedimos ao JavaScript para traduzir o mês para o formato curto ("set", "out", "nov")
+    // O replace('.', '') serve porque alguns navegadores colocam um ponto final (ex: "set.")
+    const mes = data.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
+    
+    // 3. Pegamos o ano com 4 dígitos
+    const ano = data.getFullYear();
+
+    // 4. Juntamos as duas variáveis com uma barra e jogamos no HTML
+    document.getElementById('titulo-calendario').textContent = `${mes}/${ano}`;
+}
 
     });
 
@@ -155,3 +166,17 @@ function configurarNavegacao() {
 }
 
 configurarNavegacao();
+
+function mudarTituloHeader(){
+    const h1 = document.getElementById("titulo-grupo");
+    const tamanhoMinimo = 768;
+
+    if (window.innerWidth <= tamanhoMinimo){
+        h1.textContent = '111° GEAR';
+    }
+    else {
+        h1.textContent = '111° GEAR Santos Dumont';
+    }
+}
+ mudarTituloHeader()
+ window.addEventListener('resize', mudarTituloHeader);

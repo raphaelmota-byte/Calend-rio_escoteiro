@@ -24,7 +24,7 @@ body::before{
     opacity: 0.5;
     z-index: -1;
 }
- 
+
 header{
     background-color: rgba(128, 128, 128, 0.6); /*mesma cor cinza, mas com 60% de opacidade (o 128,128,128 é o equivalente RGB de gray)*/
     backdrop-filter: blur(20px) saturate(180%); /*borra o conteúdo passando atrás e intensifica a cor dele */
@@ -50,8 +50,8 @@ header{
     height: 40px;
     width: 46px;
     border-radius:5px;
-
-
+    
+    
 }
 
 .img_topo img{
@@ -63,22 +63,18 @@ header{
 
 
 #btn-next, #btn-prev {
-    box-sizing: border-box;
 
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-
+    width: 25px;
+    height: 25px;
+    border-radius: 35%;
+    
     background-color: rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-
+    
     color: #ffffff;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1;
-    cursor: pointer;
-
+    font-size: 18px;
+    
     transition: background-color 150ms ease, transform 150ms ease;
 }
 #btn-next:hover, #btn-prev:hover {
@@ -97,33 +93,24 @@ header{
     color: black;
     -webkit-text-stroke: 0.2px white;
     white-space: nowrap;
-    min-width: 130px;
+    min-width: 32px;
     text-align: center;
-
-
+    
+    
     background-color: rgba(255, 255, 255, 0.25);
     padding: 6px 12px;
-    border-radius: 12px;
+    border-radius: 11px;
 }
 
 #btn-hoje{
 
-    box-sizing: border-box; /*faz o padding ser considerado dentro do widthe height */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 16px;
-    width:84px;
+    border-radius: 12px;
+    min-width:42px;
     height: 35px;
-    margin-right: 15px;
-    padding: 0px ;
-    border: none;
-
 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 550;
     color: #ffffff;
     background-color: rgba(0, 0, 0, 0.60);
     backdrop-filter: blur(8px);
@@ -142,27 +129,6 @@ header{
     transform: scale(0.95);
 }
 
-#btn-menu{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 30px;
-    height: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-right: 10px;
-    padding: 0;
-}
-
-#btn-menu span{
-    display: block;
-    width: 100%;
-    height: 3px;
-    background-color: black;
-    border-radius: 2px;
-}
 
 #sidebar{
     position: fixed;
@@ -234,4 +200,16 @@ header{
 #overlay.ativo{
     opacity: 1;
     pointer-events: auto;
+}
+
+@media (max-width:760px){
+    body::before{
+        background-image: url("../img/tela_fundo_mobile.png");
+         background-position: center;
+    }
+    #topo h1{
+        font-size:18px;
+        font-weight: 600;
+    }
+
 }
