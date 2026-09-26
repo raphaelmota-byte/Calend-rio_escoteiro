@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+#banco de dados
+db.sqlite3
+
+#arquivos de media vindo do usuário
+media/
+
