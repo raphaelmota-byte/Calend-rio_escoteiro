@@ -1,6 +1,24 @@
 const API_URL = "https://calend-rio-escoteiro.onrender.com/api";
 let calendar ;
 let todosEventos = [];
+let coresCategorias = {}; // NOVO: Dicionário para guardar as cores
+
+async function buscarCategorias() {
+    const resposta = await fetch(`${API_URL}/categorias/`);
+    const categorias = await resposta.json();
+
+    const container = document.getElementById('filtro-categorias');
+
+    categorias.forEach(function(categoria) {
+        // NOVO: Guarda a cor hexadecimal usando o ID da categoria como chave
+        coresCategorias[categoria.id] = categoria.cor;
+
+        const label = document.createElement('label')
+        label.innerHTML = ` <input type="checkbox" value="${categoria.id}" checked>
+            ${categoria.nome} ` ;
+        container.appendChild(label) ;
+    });
+}
 
 async function buscarEventos() {
     const resposta = await fetch(`${API_URL}/eventos/`);
@@ -10,6 +28,7 @@ async function buscarEventos() {
         return {
           title: evento.titulo,
           start: evento.data_inicio,
+          color: coresCategorias[evento.categoria] || '#3788d8',
           extendedProps: {
           categoria: evento.categoria,
           secoes: evento.secoes
@@ -49,23 +68,8 @@ async function buscarEventos() {
 }
 
 
-buscarEventos();
 
-async function buscarCategorias() {
-    const resposta = await fetch(`${API_URL}/categorias/`);
-    const categorias = await resposta.json();
 
-    const container = document.getElementById('filtro-categorias');
-
-    categorias.forEach(function(categoria) {
-        const label = document.createElement('label')
-        label.innerHTML = ` <input type="checkbox" value="${categoria.id}" checked>
-            ${categoria.nome} ` ;
-        container.appendChild(label) ;
-    });
-
-}
-buscarCategorias();
 
 async function buscarSecoes(){
     const resposta = await fetch(`${API_URL}/secoes/`)
@@ -81,7 +85,6 @@ async function buscarSecoes(){
 
     });
 }
-buscarSecoes();
 
 function aplicarFiltros() {
     const categoriasMarcadas = Array.from(
@@ -180,3 +183,14 @@ function mudarTituloHeader(){
 }
  mudarTituloHeader()
  window.addEventListener('resize', mudarTituloHeader);
+
+ async function inicializar() {
+    // 1º Carrega os filtros e o dicionário de cores
+    await buscarCategorias();
+    await buscarSecoes();
+    
+    // 2º Só depois monta os eventos e o calendário
+    await buscarEventos();
+}
+
+inicializar();
