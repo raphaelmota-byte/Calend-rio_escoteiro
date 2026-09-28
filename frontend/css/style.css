@@ -8,6 +8,10 @@ body{
     position:relative ;
     z-index: 0;
 }
+body, html {
+    overflow-x: hidden;
+    width: 100%;
+}
 
 
 body::before{
@@ -200,6 +204,11 @@ header{
 #overlay.ativo{
     opacity: 1;
     pointer-events: auto;
+}
+
+.fc-daygrid-day-number,
+.fc-col-header-cell-cushion {
+    text-decoration: none !important;
 }
 
 @media (max-width:760px){

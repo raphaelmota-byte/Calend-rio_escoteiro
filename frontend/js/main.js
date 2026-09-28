@@ -1,91 +1,112 @@
-const API_URL = "https://calend-rio-escoteiro.onrender.com/api";
-let calendar ;
-let todosEventos = [];
-let coresCategorias = {}; // NOVO: Dicionário para guardar as cores
 
-async function buscarCategorias() {
-    const resposta = await fetch(`${API_URL}/categorias/`);
-    const categorias = await resposta.json();
+const config = {
+    API_URL : "https://calend-rio-escoteiro.onrender.com/api"
+};
 
-    const container = document.getElementById('filtro-categorias');
+const Estado = {
+    calendar: null ,
+    todosEventos : [],
+    coresCategorias : {},
 
-    categorias.forEach(function(categoria) {
-        // NOVO: Guarda a cor hexadecimal usando o ID da categoria como chave
-        coresCategorias[categoria.id] = categoria.cor;
+};
 
-        const label = document.createElement('label')
-        label.innerHTML = ` <input type="checkbox" value="${categoria.id}" checked>
-            ${categoria.nome} ` ;
-        container.appendChild(label) ;
-    });
-}
+const Api = {
+  async buscarCategorias() {
+        const resposta = await fetch(`${config.API_URL}/categorias/`);
+        const categorias = await resposta.json();
 
-async function buscarEventos() {
-    const resposta = await fetch(`${API_URL}/eventos/`);
-    const eventos = await resposta.json();
+        const container = document.getElementById('filtro-categorias');
 
-    const eventosFormatados = eventos.map(function(evento) {
-        return {
-          title: evento.titulo,
-          start: evento.data_inicio,
-          color: coresCategorias[evento.categoria] || '#3788d8',
-          extendedProps: {
-          categoria: evento.categoria,
-          secoes: evento.secoes
-        }
-        };
-    });
-    todosEventos = eventosFormatados;
+        categorias.forEach(function(categoria) {
+            Estado.coresCategorias[categoria.id] = categoria.cor;
 
-    const calendarEl = document.getElementById('calendario');
-    calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        locale: 'pt-br',
-        heigth: '80vh',
-        events: eventosFormatados ,
-        headerToolbar: {
-        left: '',
-        center: '',
-        right: ''
+            const label = document.createElement('label');
+            label.innerHTML = ` <input type="checkbox" value="${categoria.id}" checked>
+                ${categoria.nome} `;
+            container.appendChild(label);
+        });
     },
-        datesSet: function(info) {
-    // 1. Pegamos a data atual que o calendário está mostrando na tela
-    const data = info.view.currentStart;
 
-    // 2. Pedimos ao JavaScript para traduzir o mês para o formato curto ("set", "out", "nov")
-    // O replace('.', '') serve porque alguns navegadores colocam um ponto final (ex: "set.")
-    const mes = data.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
-    
-    // 3. Pegamos o ano com 4 dígitos
-    const ano = data.getFullYear();
+    async buscarSecoes() {
+        const resposta = await fetch(`${config.API_URL}/secoes/`);
+        const secoes = await resposta.json();
 
-    // 4. Juntamos as duas variáveis com uma barra e jogamos no HTML
-    document.getElementById('titulo-calendario').textContent = `${mes}/${ano}`;
+        const container = document.getElementById("filtro-secoes");
+
+        secoes.forEach(function(secao){
+            const label = document.createElement('label');
+            label.innerHTML = ` <input type="checkbox" value="${secao.id}" checked>
+                ${secao.nome}`;
+            container.appendChild(label);
+        });
+    },
+
+   async buscarEventos() {
+        const resposta = await fetch(`${config.API_URL}/eventos/`);
+        const eventos = await resposta.json();
+
+        // Apenas formata e guarda no Estado.todosEventos
+        Estado.todosEventos = eventos.map(function(evento) {
+            return {
+                title: evento.titulo,
+                start: evento.data_inicio,
+                color: Estado.coresCategorias[evento.categoria] || '#3788d8',
+                extendedProps: {
+                    categoria: evento.categoria,
+                    secoes: evento.secoes
+                }
+            };
+        });
+    },
 }
 
-    });
 
-    calendar.render();
+
+const Calendario = {
+    renderizar : () => {
+        const calendarEl = document.getElementById('calendario');
+        
+        Estado.calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pt-br',
+            height: '80vh',
+            events: Estado.todosEventos, // Puxa direto do Estado global
+            headerToolbar: {
+                left: '',
+                center: '',
+                right: ''
+            },
+            datesSet: function(info) {
+                const data = info.view.currentStart;
+                const mes = data.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
+                const ano = data.getFullYear();
+                document.getElementById('titulo-calendario').textContent = `${mes}/${ano}`;
+            }
+        });
+
+        Estado.calendar.render();
+    },
+
+    navegarHoje() {
+        if (Estado.calendar) {
+            Estado.calendar.today();
+        }
+    },
+
+    proximo() {
+        if (Estado.calendar) {
+            Estado.calendar.next();
+        }
+    },
+
+    anterior() {
+        if (Estado.calendar) {
+            Estado.calendar.prev();
+        }
+    }
+        
 }
 
-
-
-
-
-async function buscarSecoes(){
-    const resposta = await fetch(`${API_URL}/secoes/`)
-    const secoes = await resposta.json()
-
-    const container = document.getElementById("filtro-secoes")
-
-    secoes.forEach(function(secao){
-        const label = document.createElement('label')
-        label.innerHTML = ` <input type="checkbox" value="${secao.id}" checked>
-            ${secao.nome}` ;
-        container.appendChild(label)
-
-    });
-}
 
 function aplicarFiltros() {
     const categoriasMarcadas = Array.from(
@@ -100,7 +121,7 @@ function aplicarFiltros() {
         return Number(input.value);
     });
 
-    const eventosFiltrados = todosEventos.filter(function(evento) {
+    const eventosFiltrados = Estado.todosEventos.filter(function(evento) {
         const categoriaOk = categoriasMarcadas.includes(evento.extendedProps.categoria);
         const secaoOk = evento.extendedProps.secoes.some(function(idSecao) {
             return secoesMarcadas.includes(idSecao);
@@ -108,7 +129,7 @@ function aplicarFiltros() {
         return categoriaOk && secaoOk;
     });
 
-    calendar.setOption('events', eventosFiltrados);
+    Estado.calendar.setOption('events', eventosFiltrados);
 }
 
 function configurarFiltros() {
@@ -140,36 +161,13 @@ function configurarMenu() {
 
 configurarMenu();
 
-function configurarBotaoHoje() {
-    const btnHoje = document.getElementById('btn-hoje');
-
-    btnHoje.addEventListener('click', function() {
-        if (calendar) {
-            calendar.today();
-        }
-    });
-}
-
-configurarBotaoHoje();
 
 function configurarNavegacao() {
-    const btnPrev = document.getElementById('btn-prev');
-    const btnNext = document.getElementById('btn-next');
-
-    btnPrev.addEventListener('click', function() {
-        if (calendar) {
-            calendar.prev();
-        }
-    });
-
-    btnNext.addEventListener('click', function() {
-        if (calendar) {
-            calendar.next();
-        }
-    });
+   document.getElementById('btn-prev').addEventListener('click', () => Calendario.anterior());
+    document.getElementById('btn-next').addEventListener('click', () => Calendario.proximo());
+    document.getElementById('btn-hoje').addEventListener('click', () => Calendario.navegarHoje());
 }
 
-configurarNavegacao();
 
 function mudarTituloHeader(){
     const h1 = document.getElementById("titulo-grupo");
@@ -186,12 +184,13 @@ function mudarTituloHeader(){
  window.addEventListener('resize', mudarTituloHeader);
 
  async function inicializar() {
-    // 1º Carrega os filtros e o dicionário de cores
-    await buscarCategorias();
-    await buscarSecoes();
+   await Api.buscarCategorias();
+    await Api.buscarSecoes();
+    await Api.buscarEventos(); // Busca os dados primeiro
     
-    // 2º Só depois monta os eventos e o calendário
-    await buscarEventos();
+    Calendario.renderizar();   // Desenha o calendário depois
+    
+    configurarNavegacao();
 }
 
 inicializar();
