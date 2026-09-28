@@ -69,7 +69,7 @@ const Calendario = {
         Estado.calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             locale: 'pt-br',
-            height: '80vh',
+            height: '70vh',
             events: Estado.todosEventos, // Puxa direto do Estado global
             headerToolbar: {
                 left: '',
