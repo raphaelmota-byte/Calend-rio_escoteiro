@@ -1,6 +1,7 @@
 
 const config = {
     API_URL : "https://calend-rio-escoteiro.onrender.com/api"
+    // API_URL : "http://127.0.0.1:8000/api"
 };
 
 const Estado = {
@@ -13,50 +14,23 @@ const Estado = {
 const Api = {
   async buscarCategorias() {
         const resposta = await fetch(`${config.API_URL}/categorias/`);
-        const categorias = await resposta.json();
+        return await resposta.json();
 
-        const container = document.getElementById('filtro-categorias');
-
-        categorias.forEach(function(categoria) {
-            Estado.coresCategorias[categoria.id] = categoria.cor;
-
-            const label = document.createElement('label');
-            label.innerHTML = ` <input type="checkbox" value="${categoria.id}" checked>
-                ${categoria.nome} `;
-            container.appendChild(label);
-        });
+        
     },
 
     async buscarSecoes() {
         const resposta = await fetch(`${config.API_URL}/secoes/`);
-        const secoes = await resposta.json();
+        return await resposta.json();
 
-        const container = document.getElementById("filtro-secoes");
-
-        secoes.forEach(function(secao){
-            const label = document.createElement('label');
-            label.innerHTML = ` <input type="checkbox" value="${secao.id}" checked>
-                ${secao.nome}`;
-            container.appendChild(label);
-        });
     },
 
    async buscarEventos() {
         const resposta = await fetch(`${config.API_URL}/eventos/`);
-        const eventos = await resposta.json();
+        return await resposta.json();
 
         // Apenas formata e guarda no Estado.todosEventos
-        Estado.todosEventos = eventos.map(function(evento) {
-            return {
-                title: evento.titulo,
-                start: evento.data_inicio,
-                color: Estado.coresCategorias[evento.categoria] || '#3788d8',
-                extendedProps: {
-                    categoria: evento.categoria,
-                    secoes: evento.secoes
-                }
-            };
-        });
+       
     },
 }
 
@@ -106,6 +80,49 @@ const Calendario = {
     }
         
 }
+
+
+function renderizarCategorias(categorias){
+    const container = document.getElementById('filtro-categorias');
+
+        categorias.forEach(function(categoria) {
+            Estado.coresCategorias[categoria.id] = categoria.cor;
+
+            const label = document.createElement('label');
+            label.innerHTML = ` <input type="checkbox" value="${categoria.id}" checked>
+                ${categoria.nome} `;
+            container.appendChild(label);
+        });
+
+}
+
+function renderizarSecoes(secoes){
+    const container = document.getElementById("filtro-secoes");
+
+        secoes.forEach(function(secao){
+            const label = document.createElement('label');
+            label.innerHTML = ` <input type="checkbox" value="${secao.id}" checked>
+                ${secao.nome}`;
+            container.appendChild(label);
+        });
+}
+
+function prepararEventos(eventos){
+    Estado.todosEventos = eventos.map(function(evento) {
+           return {
+               title: evento.titulo,
+               start: evento.data_inicio,
+               color: Estado.coresCategorias[evento.categoria] || '#3788d8',
+               extendedProps: {
+                   categoria: evento.categoria,
+                   secoes: evento.secoes
+               }
+           };
+       });
+}
+
+
+
 
 
 function aplicarFiltros() {
@@ -184,9 +201,15 @@ function mudarTituloHeader(){
  window.addEventListener('resize', mudarTituloHeader);
 
  async function inicializar() {
-   await Api.buscarCategorias();
-    await Api.buscarSecoes();
-    await Api.buscarEventos(); // Busca os dados primeiro
+    const categorias = await Api.buscarCategorias();
+    renderizarCategorias(categorias);
+
+    const secoes = await Api.buscarSecoes();
+    renderizarSecoes(secoes);
+
+    const eventos = await Api.buscarEventos(); // Busca os dados primeiro
+
+    prepararEventos(eventos);
     
     Calendario.renderizar();   // Desenha o calendário depois
     
