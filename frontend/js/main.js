@@ -41,6 +41,7 @@ async function buscarEventos() {
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'pt-br',
+        heigth: '80vh',
         events: eventosFormatados ,
         headerToolbar: {
         left: '',
