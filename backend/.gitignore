@@ -15,3 +15,5 @@ db.sqlite3
 #arquivos de media vindo do usuário
 media/
 
+backup.json
+
