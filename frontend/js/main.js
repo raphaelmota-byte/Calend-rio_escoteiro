@@ -8,6 +8,7 @@ const Estado = {
     calendar: null ,
     todosEventos : [],
     coresCategorias : {},
+    nomesSecoes: {} ,
 
 };
 
@@ -29,7 +30,6 @@ const Api = {
         const resposta = await fetch(`${config.API_URL}/eventos/`);
         return await resposta.json();
 
-        // Apenas formata e guarda no Estado.todosEventos
        
     },
 }
@@ -38,13 +38,53 @@ const Api = {
 
 const Calendario = {
     renderizar : () => {
-        const calendarEl = document.getElementById('calendario');
+        const containerCalendario = document.getElementById('calendario');
         
-        Estado.calendar = new FullCalendar.Calendar(calendarEl, {
+        // cria uma nova instancia para o fullcalendar associando ao container e guarda no objeto global
+        Estado.calendar = new FullCalendar.Calendar(containerCalendario, {
             initialView: 'dayGridMonth',
             locale: 'pt-br',
             height: '70vh',
-            events: Estado.todosEventos, // Puxa direto do Estado global
+
+
+            // FONTE DE DADOS DO CALENDÁRIO:
+            // É daqui que o FullCalendar puxa a lista exata do que será desenhado na tela.
+            // Usamos a variável da memória (Estado) em vez de um link da API para:
+            // 1. Evitar requisições lentas na internet ao mudar de mês , Permitir que os filtros de seções/categorias funcionem instantaneamente.
+            // 2. Entregar os dados já com a data formatada e os nomes das seções traduzidos.
+            events: Estado.todosEventos, 
+
+            eventClick: function(info) {
+                info.jsEvent.preventDefault();
+
+                // 1. Preenche os dados no HTML do Modal
+                document.getElementById('modal-titulo').textContent = info.event.title;
+
+                // Formata a data para padrão brasileiro na exibição
+                const dataFormatada = info.event.start.toLocaleDateString('pt-BR', { 
+                    day: '2-digit', month: '2-digit', year: 'numeric', 
+                    hour: '2-digit', minute: '2-digit' 
+                });
+                document.getElementById('modal-data').textContent = dataFormatada.replace(' 00:00', '');
+            
+                // Dados do extendedProps
+                document.getElementById('modal-local').textContent = info.event.extendedProps.local || 'Local a definir';
+                document.getElementById('modal-descricao').textContent = info.event.extendedProps.descricao || '';
+
+                const idsSecoes = info.event.extendedProps.secoes || [];
+
+                // Traduz cada número para o nome correspondente guardado no Estado
+                const nomesDasSecoes = idsSecoes.map(id => Estado.nomesSecoes[id]);
+                            
+                // Junta tudo com vírgula e injeta no HTML do Modal
+                document.getElementById('modal-secoes').textContent = nomesDasSecoes.join(', ') || 'Geral';
+
+                // 2. Chama o Modal do Bootstrap
+                const modalElement = document.getElementById('eventoModal');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            },
+            
             headerToolbar: {
                 left: '',
                 center: '',
@@ -81,6 +121,36 @@ const Calendario = {
         
 }
 
+// ---------------------------------------------------
+// EVENTOS
+// ----------------------------------------------------
+
+function prepararEventos(eventos){
+    Estado.todosEventos = eventos.map(function(evento) {
+        let stringInicio = evento.data_inicio;
+        if (evento.hora_inicio) stringInicio += 'T' + evento.hora_inicio;
+
+        // Formata Fim
+        let stringFim = evento.data_fim;
+        if (evento.hora_fim) stringFim += 'T' + evento.hora_fim;
+
+           return {
+               title: evento.titulo,
+               start: stringInicio,
+               end: stringFim ,
+               color: Estado.coresCategorias[evento.categoria] || '#3788d8',
+               display: 'block',
+
+               extendedProps: {
+                   categoria: evento.categoria,
+                   secoes: evento.secoes  ,
+                   descricao: evento.descricao,
+                   local: evento.local
+               }
+           };
+       });
+}
+
 
 function renderizarCategorias(categorias){
     const container = document.getElementById('filtro-categorias');
@@ -100,6 +170,8 @@ function renderizarSecoes(secoes){
     const container = document.getElementById("filtro-secoes");
 
         secoes.forEach(function(secao){
+            Estado.nomesSecoes[secao.id] = secao.nome;
+
             const label = document.createElement('label');
             label.innerHTML = ` <input type="checkbox" value="${secao.id}" checked>
                 ${secao.nome}`;
@@ -107,22 +179,9 @@ function renderizarSecoes(secoes){
         });
 }
 
-function prepararEventos(eventos){
-    Estado.todosEventos = eventos.map(function(evento) {
-           return {
-               title: evento.titulo,
-               start: evento.data_inicio,
-               color: Estado.coresCategorias[evento.categoria] || '#3788d8',
-               extendedProps: {
-                   categoria: evento.categoria,
-                   secoes: evento.secoes
-               }
-           };
-       });
-}
-
-
-
+// ---------------------------------------------------
+// FILTROS
+// ----------------------------------------------------
 
 
 function aplicarFiltros() {
@@ -140,9 +199,10 @@ function aplicarFiltros() {
 
     const eventosFiltrados = Estado.todosEventos.filter(function(evento) {
         const categoriaOk = categoriasMarcadas.includes(evento.extendedProps.categoria);
-        const secaoOk = evento.extendedProps.secoes.some(function(idSecao) {
-            return secoesMarcadas.includes(idSecao);
-        });
+            const secaoOk = evento.extendedProps.secoes.some(function(idSecao) {
+                return secoesMarcadas.includes(idSecao);
+            });
+
         return categoriaOk && secaoOk;
     });
 
@@ -200,7 +260,7 @@ function mudarTituloHeader(){
  mudarTituloHeader()
  window.addEventListener('resize', mudarTituloHeader);
 
- async function inicializar() {
+async function inicializar() {
     const categorias = await Api.buscarCategorias();
     renderizarCategorias(categorias);
 
